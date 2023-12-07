@@ -1,6 +1,5 @@
 package edu.uw.ischool.nalogman.tipcalc
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
@@ -8,6 +7,8 @@ import android.text.TextWatcher
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import java.text.NumberFormat
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,10 +48,12 @@ class MainActivity : AppCompatActivity() {
 
         // Add an OnClickListener to the "Tip" button to calculate and display the tip
         buttonTip.setOnClickListener {
-            val serviceCharge = editTextAmount.text.toString().toDoubleOrNull()
+            val cleanAmount = editTextAmount.text.toString().replace("[^\\d.]".toRegex(), "")
+            val serviceCharge = cleanAmount.toDoubleOrNull()
+
             if (serviceCharge != null) {
                 val tipAmount = serviceCharge * 0.15
-                val formattedTip = String.format("$%.2f", tipAmount)
+                val formattedTip = NumberFormat.getCurrencyInstance().format(tipAmount)
                 Toast.makeText(this, "Tip: $formattedTip", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this, "Please enter a valid service charge", Toast.LENGTH_SHORT).show()
